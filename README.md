@@ -44,7 +44,7 @@ The [\i]() command to initialize (install) our chinook sql file. ( eg. \i Chinoo
 To find out more about SQL please check out  this Quick Reference from [W3Schools](https://www.w3schools.com/sql/sql_quickref.asp)
 
 
-## PostgreSql with Python using psycopg2 adapter.
+## PostgreSql with Python using psycopg2 adapter
 
 ### Set-up workspace:
 
@@ -79,7 +79,7 @@ To find out more about SQL please check out  this Quick Reference from [W3School
     for result in results:
         print(result)
 
-### Basics psycopg2 Queries examples are:
+### Basics psycopg2 Queries examples:
 
     # Query 1 - select all records from the "Artist" table
     cursor.execute('SELECT * FROM "Artist"')
@@ -100,7 +100,7 @@ To find out more about SQL please check out  this Quick Reference from [W3School
     "Track" table
     cursor.execute('SELECT * FROM "Track" WHERE "Composer" = %s', ['Queen'])
 
-## PostgreSql with python and [SQLAlchemy](https://www.sqlalchemy.org/) using Expression Language.
+## PostgreSql with python and [SQLAlchemy](https://www.sqlalchemy.org/) using Expression Language
 
 ### Set-up workspace:
 
@@ -130,7 +130,7 @@ To find out more about SQL please check out  this Quick Reference from [W3School
       for result in results:
         print(result)
 
-### Basic SQLAlchemy Expression Language Queries examples are:
+### Basic SQLAlchemy Expression Language Queries examples:
 
     # Query 1 - select all records form the "Artist" table
     # select_query = artist_table.select()
@@ -150,7 +150,7 @@ To find out more about SQL please check out  this Quick Reference from [W3School
     # Query 6 - select all tracks where the composer is 'Queen' from the "Track" table
     # select_query = track_table.select().where(track_table.c.Composer == 'Queen')
 
-## PostgreSql with python and [SQLAlchemy](https://www.sqlalchemy.org/) using ORM (Object Relational Mapping).
+## PostgreSql with python and [SQLAlchemy](https://www.sqlalchemy.org/) using ORM (Object Relational Mapping):
 
 ### Set-up workspace:
 
@@ -225,6 +225,127 @@ To find out more about SQL please check out  this Quick Reference from [W3School
             sep=" | "
             )
 
+## PostgreSql with python and [SQLAlchemy](https://www.sqlalchemy.org/) using ORM + CRUD funtionality:
+
+### Set-up workspace:
+
+    Create a new file:
+
+      touch sql-crud.py
+### Python file set-up:
+
+    from sqlalchemy import (
+        create_engine, Column, Integer, String
+    )
+    from sqlalchemy.ext.declarative import declarative_base
+    from sqlalchemy.orm import sessionmaker
+
+
+    # executing the instructions from the "chinook" database
+    db = create_engine("postgresql:///chinook")
+    base = declarative_base()
+
+    # instead of connecting to the database directly, we will ask for a session
+    # create a new instance of sessionmaker, then point to our engine (the db)
+    Session = sessionmaker(db)
+    # opens an actual session by calling the Session() subclass defined above
+    session = Session()
+
+    # creating the database using declarative_base subclass
+    base.metadata.create_all(db)
+
+### [C]reate a new table
+
+    # create a class-based model for the "Programmer" table
+    class Programmer(base):
+        __tablename__ = "Programmer"
+        id = Column(Integer, primary_key=True)
+        first_name = Column(String)
+        last_name = Column(String)
+        gender = Column(String)
+        nationality = Column(String)
+        # famous_for = Column(String)
+
+### [C]reate a new record
+
+    # creating records on our Progammer table
+    ada_lovelace = Programmer(
+        first_name="Ada",
+        last_name="Lovelace",
+        gender="F",
+        nationality="British",
+        # famous_for="First Programmer"
+        )
+
+### Add a new record
+
+    # add each instance of our programmers to our session
+    # session.add(ada_lovelace)
+
+### [R]ead records
+
+    # query the database to find all Programmers
+    programmers = session.query(Programmer)
+    for programmer in programmers:
+        print(
+            programmer.id,
+            programmer.first_name + " " + programmer.last_name,
+            programmer.gender,
+            programmer.nationality,
+            # programmer.famous_for,
+            sep=" | "
+        )
+
+### [U]pdating a single record by id
+
+        # updating a single record
+        # programmer = session.query(Programmer).filter_by(id=7).first()
+        # programmer.famous_for = "World President"
+
+### [U]pdating multiple records
+
+        # updating multiple records
+        # people = session.query(Programmer)
+        # for person in people:
+        #     if person.gender == "F":
+        #         person.gender = "Female"
+        #     elif person.gender == "M":
+        #         person.gender = "Male"
+        #     else:
+        #         print("Gender not defined")
+
+### [D]elete a single record
+
+    # deleting a single record
+    # fname = input("Enter a first name: ")
+    # lname = input("Enter a last name: ")
+    # programmer = session.query(Programmer).filter_by(
+    # first_name=fname, last_name=lname).first()
+    # defensive programming
+    # if programmer is not None:
+    #     print(
+    # "Programmer Found: ", programmer.first_name + " " + programmer.last_name)
+    #     confirmation = input(
+    # "Are you sure you want to delete this record? (y/n) ")
+    #     if confirmation.lower() == "y":
+    #         session.delete(programmer)
+    #         session.commit()
+    #         print("Programmer has been deleted")
+    #     else:
+    #         print("Programmer not deleted")
+    # else:
+    #     print("No records found")
+
+### [D]elete multiple/all records (Don't use it unless completely sure)
+
+    # delete multiple/all records
+    # programmers = session.query(Programmer)
+    # for programmer in programmers:
+    #     session.delete(programmer)
+### Commit a new record || session
+
+    # commit our session to the database
+    # session.commit()
 
 ---
 
