@@ -2,7 +2,7 @@
 //////////////////////////////////////////////////////////////////////////////
 copy content from DataBase to CSV File:
 
-\copy (SELECT * FROM "Track" WHERE "Composer" = 'Queen') TO 'test.csv' WITH CSV DELIMITER ',' HEADER;
+chinook=# \copy (SELECT * FROM "Track" WHERE "Composer" = 'Queen') TO 'test.csv' WITH CSV DELIMITER ',' HEADER;
 
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -12,6 +12,6 @@ create a json file:
 
 copy content form DataBase to json.test file:
 
-SELECT json_agg(t) FROM (SELECT * FROM "Track" WHERE "Composer" = 'Queen') t;
+chinook=# SELECT json_agg(t) FROM (SELECT * FROM "Track" WHERE "Composer" = 'Queen') t;
 
 /////////////////////////////////////////////////////////////////////////////
